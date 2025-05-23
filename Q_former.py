@@ -1,6 +1,8 @@
 import timm  
 import torch
-import torch.nn as nn 
+import torch.nn as nn
+from transformers import BertModel, BertTokenizer
+
 
 
 
@@ -86,3 +88,6 @@ class Q_former_fusion(nn.Module):
         combined = self.relu(self.fc_layer(combined))
         output = self.final_fc(combined)
         return output
+
+# python -c "import torch; print(torch.__version__)"
+# y

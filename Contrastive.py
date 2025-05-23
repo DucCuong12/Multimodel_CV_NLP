@@ -2,6 +2,7 @@ import timm  # Make sure to install timm: pip install timm
 import torch.nn.functional as F
 import torch
 import torch.nn as nn
+from transformers import BertModel, BertTokenizer
 
 
 
@@ -63,7 +64,7 @@ class Q_cons_fusion(nn.Module):
         self.num_query_tokens = num_query_tokens
         self.hidden_dim = hidden_dim
         self.query_tokens = nn.Parameter(torch.randn(num_query_tokens, hidden_dim))  # [32, 768]
-        self.q_norm = nn.LayerNorm(hidden_dim)
+        self.q_norm = nn.LayerNorm(hidden_dim,  eps = 1e-6)
         self.img_encoder = ImageEncoder()    #ViT: size: Batch x 197 x 768
         for param in self.img_encoder.parameters():
             param.requires_grad = False
@@ -77,17 +78,19 @@ class Q_cons_fusion(nn.Module):
         self.q_mlp = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim),
             nn.ReLU(),
+            # nn.LayerNorm(hidden_dim, eps = 1e-6),
             nn.Dropout(0.1),
             nn.Linear(hidden_dim, hidden_dim),
         )
         self.fusion = nn.Sequential(
+            # nn.LayerNorm(hidden_dim * 2, eps =1e-6),
             nn.Linear(hidden_dim * 2, 512),
             nn.ReLU(),
             nn.Dropout(0.3),  # Increased dropout to prevent early overfitting
             nn.Linear(512, 256),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(256, 4)
+            nn.Linear(256, 30)
         )
     def forward(self,img, input_ids, attention_mask):
         img = self.img_encoder(img)   #VIT: batch x 197 x 768
@@ -97,15 +100,11 @@ class Q_cons_fusion(nn.Module):
         cross_vit = self.q_norm(self.q_mlp(cross_vit)+query)
         img = cross_vit.mean(dim=1)
         text = self.text_encoder(input_ids, attention_mask)    # batch x 768
-        img = F.normalize(img, dim =-1)
-        text = F.normalize(text, dim=-1)
+        img = F.normalize(img, dim =-1, eps=1e-6)
+        text = F.normalize(text, dim=-1, eps=1e-6)
         logit_img = img @ text.T
         logit_text = text @ img.T
         combined = torch.cat((text, img), dim=1)  # [batch, 1024]
-        # combined = self.relu(self.mix(self.dropout(combined)))   # 512                
-        # # Feed Forward Layer
-        # combined = self.relu(self.fc_layer(combined))
-        # output = self.final_fc(combined)
         output = self.fusion(combined)
         return output, logit_img, logit_text
 
@@ -115,8 +114,8 @@ def compute_itc_loss(img_feat, text_feat, temperature=0.07):
     text_feat: Tensor [B, D]
     """
     # Normalize embeddings
-    img_feat = F.normalize(img_feat, dim=-1)
-    text_feat = F.normalize(text_feat, dim=-1)
+    img_feat = F.normalize(img_feat, dim=-1, eps=1e-6)
+    text_feat = F.normalize(text_feat, dim=-1, eps=1e-6)
 
     # Cosine similarity: [B, B]
     logits_per_image = img_feat @ text_feat.T
