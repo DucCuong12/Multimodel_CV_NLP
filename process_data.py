@@ -24,7 +24,7 @@ class MyData(Dataset):
             "Romance": 3,
         }
         self.max_length=512
-        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+        self.tokenizer = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
         self.dataset = pd.read_csv(self.csv_file)
         # self.max_length 
         # self.dataset = pd.read_csv(self.csv_file, encoding="latin1")
