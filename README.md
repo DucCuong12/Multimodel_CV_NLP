@@ -1,6 +1,6 @@
 # FLUID: Flow-Latent Unified Integration via Token Distillation for Expert Specialization in Multimodal Learning
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-red)](./SoICT__2025_Toán_rời_rạc_69.pdf)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-b31b1b.svg)](https://arxiv.org/abs/2508.07264)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
@@ -60,6 +60,19 @@ cd FLUID
 # Create virtual environment
 python3 -m venv venv
 source venv/bin/activate
+```
+
+## 📂 Dataset
+
+We evaluate on the GLAMI-1M dataset:
+
+1.11M fashion product records, 13 languages, 191 classes
+
+You can download GLAMI-1M following the instructions from the official BMVC 2022 page.
 
 # Install dependencies
 pip install -r requirements.txt
+
+## Usage
+
+python train.py --epochs
