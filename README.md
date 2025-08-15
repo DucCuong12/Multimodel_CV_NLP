@@ -54,8 +54,8 @@ FLUID follows a **two-stage fusion**:
 ## ⚙ Installation
 ```bash
 # Clone this repository
-git clone https://github.com/your-username/FLUID.git
-cd FLUID
+git clone https://github.com/DucCuong12/Multimodel_CV_NLP.git
+cd Multimodel_CV_NLP
 
 # Create virtual environment
 python3 -m venv venv
