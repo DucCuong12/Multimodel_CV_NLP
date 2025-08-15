@@ -42,7 +42,7 @@ FLUID achieves **91% accuracy** on the challenging **GLAMI-1M** benchmark, outpe
 
 ## 🏗 Architecture
 <p align="center">
-  <img src="./assets/fluid_architecture.png" alt="FLUID Architecture" width="800">
+  <img src="./fluid.png" alt="FLUID Architecture" width="800">
 </p>
 
 FLUID follows a **two-stage fusion**:
