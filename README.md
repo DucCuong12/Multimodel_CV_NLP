@@ -1,38 +1,65 @@
-#  Multimodal Food Classification with Text & Image (FOOD-101)
+# FLUID: Flow-Latent Unified Integration via Token Distillation for Expert Specialization in Multimodal Learning
 
-This repository explores multimodal deep learning techniques for food classification using the [FOOD-101 dataset](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/), which includes **image** and **text** data. Our goal is to accurately classify food categories using a combination of visual and textual modalities.
-
----
-
-## 📌 Problem Statement
-
-Food classification is challenging due to high intra-class variation and subtle visual similarities across different food types. Traditional vision-only models can struggle in such cases. This project enhances classification performance by leveraging **multimodal inputs** — combining both **image** and **textual** information.
+[![Paper](https://img.shields.io/badge/Paper-PDF-red)](./SoICT__2025_Toán_rời_rạc_69.pdf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
 
-## 🧠 Approach
+## 📌 Overview
+**FLUID** is a robust multimodal classification architecture that enhances the integration of visual and textual information through:
+- **Q-Transforms** for token-level feature distillation
+- **Contrastive alignment** for cross-modal consistency
+- **Adaptive gated fusion** to dynamically balance modalities
+- **Q-Bottleneck** for compact, task-specific representation
+- **Lightweight Mixture-of-Experts (MoE)** for specialized output prediction
 
-We explore and compare three different model architectures:
-
-### 1. ✅ MLP Baseline
-- Concatenates image and text features.
-- Uses simple feed-forward layers to classify.
-- Acts as a baseline for performance comparison.
-
-### 2. 🔀 Cross-Attention Model
-- Applies a Cross-Multihead Attention layer between learnable query tokens and image features.
-- Inspired by the success of cross-modal attention in vision-language models.
-
-### 3. 🚀 Refined Q-Former (Inspired by BLIP-2)
-- A more advanced design based on the Q-Former architecture from BLIP-2.
-- Learns a set of query tokens that attend to image features.
-- Output is fused with textual features before classification.
-- Includes residual connections, layer normalization, and deeper fusion MLP for better performance and stability.
+FLUID achieves **91% accuracy** on the challenging **GLAMI-1M** benchmark, outperforming strong multimodal baselines while demonstrating resilience to noise, imbalance, and semantic diversity.
 
 ---
 
-## 📂 Dataset
+## 📜 Table of Contents
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Architecture](#-architecture)
+- [Installation](#-installation)
+- [Dataset](#-dataset)
+- [Usage](#-usage)
+- [Results](#-results)
+- [Ablation Study](#-ablation-study)
+- [Citations](#-citations)
+- [License](#-license)
 
-- **FOOD-101**: 101 food categories with 1,000 images each.
-- Textual information includes class names and optionally short descriptions.
+---
 
+## 🚀 Key Features
+- **Q-Transform:** Learnable query tokens to retain only salient token-level features.
+- **Contrastive Fusion:** Enforces cross-modal alignment before fusion.
+- **Gated Mechanism:** Learns adaptive weights for modality contributions.
+- **Q-Bottleneck:** Selectively compresses fused features for better noise suppression.
+- **Mixture-of-Experts:** Enhances prediction robustness through expert specialization.
+
+---
+
+## 🏗 Architecture
+<p align="center">
+  <img src="./assets/fluid_architecture.png" alt="FLUID Architecture" width="800">
+</p>
+
+FLUID follows a **two-stage fusion**:
+1. **Feature Extraction:** ViT for images, mBERT for text → Q-Transform blocks → Contrastive alignment
+2. **Fusion & Prediction:** Gated fusion → Q-Bottleneck → MoE classifier
+
+---
+
+## ⚙ Installation
+```bash
+# Clone this repository
+git clone https://github.com/your-username/FLUID.git
+cd FLUID
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
